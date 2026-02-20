@@ -1,0 +1,29 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "ROS 2 Jazzy",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "ros:jazzy",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/src,type=bind",
+	"workspaceFolder": "/workspaces/src",
+	"runArgs": ["--shm-size=4gb", "--ulimit=memlock=-1"],
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+	
+	"containerEnv": {
+		"RMW_IMPLEMENTATION": "rmw_zenoh_cpp",
+		"ZENOH_CONFIG_OVERRIDE": "transport/shared_memory/enabled=true"
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "apt update && rosdep update && rosdep install -i --from-paths /workspaces/src -y",
+
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
