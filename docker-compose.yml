@@ -1,0 +1,34 @@
+services:
+
+  zenoh-router:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_CONFIG_OVERRIDE=routing/router/peers_failover_brokering=true
+    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 run rmw_zenoh_cpp rmw_zenohd"
+
+  test-subscriber-1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/zenoh-router:7447"]
+      - ROS_DOMAIN_ID=5
+    volumes:
+      - ./trace/test-subscriber-1:/root/.ros/tracing
+    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=50 test_subscriber_2:=false"
+
+  test-subscriber-2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/zenoh-router:7447"]
+      - ROS_DOMAIN_ID=5
+    volumes:
+      - ./trace/test-subscriber-2:/root/.ros/tracing
+    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=50 dummy_publisher:=false test_subscriber_1:=false"
