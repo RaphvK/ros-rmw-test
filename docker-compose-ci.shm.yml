@@ -1,0 +1,40 @@
+services:
+
+  zenoh-router:
+    extends:
+      file: docker-compose-ci.yml
+      service: zenoh-router
+    environment:
+      - ZENOH_CONFIG_OVERRIDE=routing/router/peers_failover_brokering=true;transport/shared_memory/enabled=true
+    ipc: shareable
+    shm_size: 4gb
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+
+  test-subscriber-1:
+    extends:
+      file: docker-compose-ci.yml
+      service: test-subscriber-1
+    environment:
+      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/zenoh-router:7447"];transport/shared_memory/enabled=true
+    ipc: service:zenoh-router
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+
+  test-subscriber-2:
+    extends:
+      file: docker-compose-ci.yml
+      service: test-subscriber-2
+    environment:
+      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/zenoh-router:7447"];transport/shared_memory/enabled=true
+    ipc: service:zenoh-router
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1

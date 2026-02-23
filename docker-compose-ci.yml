@@ -1,0 +1,28 @@
+services:
+
+  zenoh-router:
+    image: ghcr.io/raphvk/ros-rmw-test:zenoh-router-jazzy
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_CONFIG_OVERRIDE=routing/router/peers_failover_brokering=true
+    command: ros2 run rmw_zenoh_cpp rmw_zenohd
+
+  test-subscriber-1:
+    image: ghcr.io/raphvk/ros-rmw-test:test-publisher-jazzy
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/zenoh-router:7447"]
+      - ROS_DOMAIN_ID=5
+    volumes:
+      - ./trace/test-subscriber-1:/root/.ros/tracing
+    command: ros2 launch test_publisher test_publisher_launch.py duration:=50 test_subscriber_2:=false
+
+  test-subscriber-2:
+    image: ghcr.io/raphvk/ros-rmw-test:test-publisher-jazzy
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/zenoh-router:7447"]
+      - ROS_DOMAIN_ID=5
+    volumes:
+      - ./trace/test-subscriber-2:/root/.ros/tracing
+    command: ros2 launch test_publisher test_publisher_launch.py duration:=50 dummy_publisher:=false test_subscriber_1:=false
