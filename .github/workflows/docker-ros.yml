@@ -18,6 +18,7 @@ jobs:
           build-context: zenoh-router
           platform: amd64
           target: run
+          enable-slim: false
           image-tag: zenoh-router-jazzy
           base-image: rwthika/ros2:jazzy
           rmw-implementation: rmw_zenoh_cpp
@@ -31,6 +32,7 @@ jobs:
           build-context: test_publisher
           platform: amd64
           target: run
+          enable-slim: false
           image-tag: test-publisher-jazzy
           base-image: rwthika/ros2:jazzy
           rmw-implementation: rmw_zenoh_cpp
