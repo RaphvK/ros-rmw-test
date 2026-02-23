@@ -21,6 +21,7 @@ def generate_launch_description():
         DeclareLaunchArgument("test_subscriber_1", default_value="true", description="enable test subscriber 1"),
         DeclareLaunchArgument("test_subscriber_2", default_value="true", description="enable test subscriber 2"),
         DeclareLaunchArgument("duration", default_value="0", description="Duration in seconds after which to stop all nodes (0 = run indefinitely)"),
+        DeclareLaunchArgument("variable_message_size", default_value="true", description="Use variable message size (10-20 MB) instead of fixed 10 MB"),
     ]
 
     nodes = [
@@ -29,6 +30,9 @@ def generate_launch_description():
             executable="dummy_publisher",
             namespace="",
             name="dummy_publisher",
+            parameters=[{
+                "variable_message_size": LaunchConfiguration("variable_message_size"),
+            }],
             remappings=[
                 ("~/topic", "input_topic_1"),
             ],

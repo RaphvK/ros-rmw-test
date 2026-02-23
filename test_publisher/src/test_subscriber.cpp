@@ -17,13 +17,13 @@ void TestSubscriber::setup() {
   // subscriber for handling incoming messages
   subscriber_ = this->create_subscription<std_msgs::msg::UInt8MultiArray>(
     "~/input", 
-    10,
+    1,
     std::bind(&TestSubscriber::topicCallback, this, std::placeholders::_1)
   );
   RCLCPP_INFO(this->get_logger(), "Subscribed to '%s'", subscriber_->get_topic_name());
   publisher_ = this->create_publisher<std_msgs::msg::UInt8MultiArray>(
     "~/output", 
-    10
+    1
   );
   RCLCPP_INFO(this->get_logger(), "Publishing to '%s'", publisher_->get_topic_name());
 }
