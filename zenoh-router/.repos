@@ -1,0 +1,5 @@
+repositories:
+  rmw_zenoh:
+    type: git
+    url: https://github.com/ros2/rmw_zenoh.git
+    version: 0.2.5
