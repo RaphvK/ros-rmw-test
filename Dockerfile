@@ -1,4 +1,4 @@
-FROM ros:jazzy
+FROM rwthika/ros2:jazzy
 
 COPY test_publisher /ws/src/test_publisher
 RUN apt-get update && rosdep update && rosdep install -y --from-paths /ws/src --ignore-src --rosdistro jazzy
