@@ -1,8 +1,7 @@
 #include <chrono>
 #include <random>
 #include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/int32.hpp>
-#include <std_msgs/msg/u_int8_multi_array.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 
 using namespace std::chrono_literals;
 
@@ -17,7 +16,7 @@ public:
     this->declare_parameter("variable_message_size", true);
     variable_message_size_ = this->get_parameter("variable_message_size").as_bool();
     
-    publisher_ = this->create_publisher<std_msgs::msg::UInt8MultiArray>(
+    publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(
       "~/topic", 
       1
     );
@@ -30,7 +29,7 @@ public:
 
 private:
   void timerCallback() {
-    auto message = std_msgs::msg::UInt8MultiArray();
+    auto message = sensor_msgs::msg::PointCloud2();
     // Create message with variable or fixed size
     size_t message_size;
     if (variable_message_size_) {
@@ -38,6 +37,17 @@ private:
     } else {
       message_size = 10 * 1024 * 1024;  // Fixed 10 MB
     }
+    
+    // Set up PointCloud2 structure
+    message.header.stamp = this->now();
+    message.header.frame_id = "base_link";
+    message.height = 1;
+    message.width = message_size / 4;  // Assuming 4 bytes per point (x coordinate as float)
+    message.is_bigendian = false;
+    message.point_step = 4;
+    message.row_step = message_size;
+    message.is_dense = true;
+    
     message.data.resize(message_size);
     // Fill with pattern based on count
     for (size_t i = 0; i < message.data.size(); i++) {
@@ -48,7 +58,7 @@ private:
     publisher_->publish(message);
   }
   rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr publisher_;
+  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr publisher_;
   int count_ = 0;
   bool variable_message_size_;
   std::mt19937 rng_;

@@ -15,13 +15,13 @@ TestSubscriber::TestSubscriber() : Node("test_subscriber") {
 void TestSubscriber::setup() {
 
   // subscriber for handling incoming messages
-  subscriber_ = this->create_subscription<std_msgs::msg::UInt8MultiArray>(
+  subscriber_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
     "~/input", 
     1,
     std::bind(&TestSubscriber::topicCallback, this, std::placeholders::_1)
   );
   RCLCPP_INFO(this->get_logger(), "Subscribed to '%s'", subscriber_->get_topic_name());
-  publisher_ = this->create_publisher<std_msgs::msg::UInt8MultiArray>(
+  publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(
     "~/output", 
     1
   );
@@ -29,7 +29,7 @@ void TestSubscriber::setup() {
 }
 
 
-void TestSubscriber::topicCallback(const std_msgs::msg::UInt8MultiArray::ConstSharedPtr& msg) {
+void TestSubscriber::topicCallback(const sensor_msgs::msg::PointCloud2::ConstSharedPtr& msg) {
 
   RCLCPP_INFO(this->get_logger(), "Message received with size: '%ld'", msg->data.size());
   publisher_->publish(*msg);

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/u_int8_multi_array.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 
 
 namespace test_subscriber {
@@ -35,16 +35,16 @@ class TestSubscriber : public rclcpp::Node {
    *
    * @param msg message
    */
-  void topicCallback(const std_msgs::msg::UInt8MultiArray::ConstSharedPtr& msg);
+  void topicCallback(const sensor_msgs::msg::PointCloud2::ConstSharedPtr& msg);
 
  private:
 
   /**
    * @brief Subscriber
    */
-  rclcpp::Subscription<std_msgs::msg::UInt8MultiArray>::SharedPtr subscriber_;
+  rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr subscriber_;
 
-  rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr publisher_;
+  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr publisher_;
   
 };
 

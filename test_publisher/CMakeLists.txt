@@ -7,7 +7,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 set(TARGET_NAME test_subscriber)
 
@@ -23,12 +23,12 @@ target_compile_features(dummy_publisher PUBLIC c_std_99 cxx_std_17)
 
 target_link_libraries(${TARGET_NAME} PUBLIC
   rclcpp::rclcpp
-  ${std_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
 )
 
 target_link_libraries(dummy_publisher PUBLIC
   rclcpp::rclcpp
-  ${std_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
 )
 
 install(TARGETS ${TARGET_NAME} dummy_publisher
