@@ -10,8 +10,8 @@ services:
     shm_size: 4gb
     ulimits:
       memlock:
-        soft: -1
-        hard: -1
+        soft: 4294967296  # 4 GB = size of shared memory segment defined for zenoh-router
+        hard: 4294967296
 
 
   test-subscriber-1:
@@ -23,8 +23,8 @@ services:
     ipc: service:zenoh-router
     ulimits:
       memlock:
-        soft: -1
-        hard: -1
+        soft: 4294967296  # 4 GB = size of shared memory segment defined for zenoh-router
+        hard: 4294967296
 
 
   test-subscriber-2:
@@ -36,5 +36,5 @@ services:
     ipc: service:zenoh-router
     ulimits:
       memlock:
-        soft: -1
-        hard: -1
+        soft: 4294967296  # 4 GB = size of shared memory segment defined for zenoh-router
+        hard: 4294967296
