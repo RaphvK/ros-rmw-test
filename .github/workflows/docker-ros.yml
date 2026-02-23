@@ -10,16 +10,28 @@ on:
 
 jobs:
 
-  ros2-jazzy:
+  zenoh-router-jazzy:
     runs-on: ubuntu-latest
     steps:
       - uses: ika-rwth-aachen/docker-ros@main
         with:
+          build-context: zenoh-router
           platform: amd64
           target: run
-          image-tag: ros2-jazzy
-          enable-push-as-latest: 'true'
+          image-tag: zenoh-router-jazzy
+          base-image: rwthika/ros2:jazzy
+          rmw-implementation: rmw_zenoh_cpp
+          command: ros2 run rmw_zenoh_cpp rmw_zenohd
+
+  test-publisher-jazzy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ika-rwth-aachen/docker-ros@main
+        with:
+          build-context: test_publisher
+          platform: amd64
+          target: run
+          image-tag: test-publisher-jazzy
           base-image: rwthika/ros2:jazzy
           rmw-implementation: rmw_zenoh_cpp
           command: ros2 launch test_publisher test_publisher_launch.py
-          enable-recursive-vcs-import: 'false'
