@@ -1,7 +1,8 @@
 services:
 
   zenoh-router:
-    image: ghcr.io/raphvk/ros-rmw-test:zenoh-router-jazzy
+    image: ghcr.io/raphvk/ros-rmw-test:test-publisher-jazzy  # rmw_zenoh_cpp 0.2.9 (latest jazzy release)
+    # image: ghcr.io/raphvk/ros-rmw-test:zenoh-router-jazzy  # rmw_zenoh_cpp 0.2.5
     environment:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ZENOH_CONFIG_OVERRIDE=routing/router/peers_failover_brokering=true
