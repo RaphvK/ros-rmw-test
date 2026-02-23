@@ -1,0 +1,14 @@
+services:
+
+  test-publisher:
+    extends:
+      file: docker-compose-single.yml
+      service: test-publisher
+    environment:
+      - ZENOH_CONFIG_OVERRIDE=routing/router/peers_failover_brokering=true;transport/shared_memory/enabled=true
+    ipc: shareable
+    shm_size: 4gb
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
