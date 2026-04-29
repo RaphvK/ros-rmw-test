@@ -42,7 +42,7 @@
     ///
     /// ROS setting: By default connect to the Zenoh router on localhost on port 7447.
     endpoints: [
-      "tls/zenoh-router:7447"
+      "quic/zenoh-router:7447"
     ],
 
     /// Global connect configuration,
@@ -93,9 +93,9 @@
     ///
     /// ROS setting: By default accept incoming connections only from localhost (i.e. from colocalized Nodes).
     ///              All communications with other hosts are routed by the Zenoh router.
-    endpoints: [
-      "tcp/[::]:0"
-    ],
+    /// endpoints: [
+    ///   "tcp/localhost:0"
+    /// ],
 
     /// Global listen configuration,
     /// Accepts a single value or different values for router, peer and client.
