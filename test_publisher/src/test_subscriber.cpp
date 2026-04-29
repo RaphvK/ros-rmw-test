@@ -15,15 +15,17 @@ TestSubscriber::TestSubscriber() : Node("test_subscriber") {
 void TestSubscriber::setup() {
 
   // subscriber for handling incoming messages
+  auto subscriber_qos_profile = rclcpp::SensorDataQoS().keep_last(1);
   subscriber_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
     "~/input", 
-    1,
+    subscriber_qos_profile,
     std::bind(&TestSubscriber::topicCallback, this, std::placeholders::_1)
   );
   RCLCPP_INFO(this->get_logger(), "Subscribed to '%s'", subscriber_->get_topic_name());
+  auto publisher_qos_profile = rclcpp::SensorDataQoS().keep_last(1);
   publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(
     "~/output", 
-    1
+    publisher_qos_profile
   );
   RCLCPP_INFO(this->get_logger(), "Publishing to '%s'", publisher_->get_topic_name());
 }

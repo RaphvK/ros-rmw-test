@@ -15,10 +15,11 @@ public:
     // Declare and get parameter
     this->declare_parameter("variable_message_size", true);
     variable_message_size_ = this->get_parameter("variable_message_size").as_bool();
-    
+
+    auto publisher_qos_profile = rclcpp::SensorDataQoS().keep_last(1);
     publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(
       "~/topic", 
-      1
+      publisher_qos_profile
     );
     timer_ = this->create_wall_timer(
       500ms, std::bind(&DummyPublisher::timerCallback, this));
