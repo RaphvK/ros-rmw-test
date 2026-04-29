@@ -89,8 +89,7 @@
     ///
     /// See https://docs.rs/zenoh/latest/zenoh/config/struct.EndPoint.html
     endpoints: [
-      "tcp/[::]:7447",
-      "udp/[::]:7447", /// ika change
+      "tcp/[::]:7447"
     ],
 
     /// Global listen configuration,
@@ -751,7 +750,7 @@
       /// subscriber side. By doing so, the probing procedure will succeed and shared memory will operate as expected.
       ///
       /// ROS setting: disabled by default until fully tested
-      enabled: false, /// ika change
+      enabled: false,
       /// SHM resources initialization mode (default "lazy").
       /// - "lazy": SHM subsystem internals will be initialized lazily upon the first SHM buffer
       /// allocation or reception. This setting provides better startup time and optimizes resource usage,
@@ -764,7 +763,7 @@
           /// Implicitly puts large messages into shared memory for transports with SHM-compatible connection.
           enabled: true,
           /// SHM memory size in bytes used for transport optimization (default `16 * 1024 * 1024`).
-          pool_size: 100663296,  /// ika change
+          pool_size: 16777216,
           /// Allow optimization for messages equal or larger than this threshold in bytes (default `3072`).
           message_size_threshold: 3072,
       },
