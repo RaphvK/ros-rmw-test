@@ -12,7 +12,8 @@
 	
 	"containerEnv": {
 		"RMW_IMPLEMENTATION": "rmw_zenoh_cpp",
-		"ZENOH_CONFIG_OVERRIDE": "transport/shared_memory/enabled=true"
+		"ZENOH_SESSION_CONFIG_URI": "/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_SESSION_CONFIG_control.json5",
+		"ZENOH_ROUTER_CONFIG_URI": "/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5"
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
