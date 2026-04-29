@@ -3,7 +3,10 @@
 {
 	"name": "ROS 2 Jazzy",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "ros:jazzy",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/src,type=bind",
 	"workspaceFolder": "/workspaces/src",
 	"runArgs": ["--shm-size=4gb", "--ulimit=memlock=-1"],

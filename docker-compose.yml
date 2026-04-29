@@ -6,29 +6,33 @@ services:
       dockerfile: Dockerfile
     environment:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
-      - ZENOH_CONFIG_OVERRIDE=routing/router/peers_failover_brokering=true
+      - ZENOH_ROUTER_CONFIG_URI=/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5
+    volumes:
+      - ./rmw_config:/workspaces/src/rmw_config
     command: /bin/bash -ic "source /ws/install/setup.bash && ros2 run rmw_zenoh_cpp rmw_zenohd"
 
-  test-subscriber-1:
+  test-publisher:
     build:
       context: .
       dockerfile: Dockerfile
     environment:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
-      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/zenoh-router:7447"]
+      - ZENOH_SESSION_CONFIG_URI=/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_SESSION_CONFIG.json5
       - ROS_DOMAIN_ID=5
     volumes:
-      - ./trace/test-subscriber-1:/root/.ros/tracing
-    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=50 test_subscriber_2:=false"
+      - ./trace/test-publisher:/root/.ros/tracing
+      - ./rmw_config:/workspaces/src/rmw_config
+    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=1000 test_subscriber_1:=false test_subscriber_2:=false"
 
-  test-subscriber-2:
+  test-subscriber:
     build:
       context: .
       dockerfile: Dockerfile
     environment:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
-      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/zenoh-router:7447"]
+      - ZENOH_SESSION_CONFIG_URI=/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_SESSION_CONFIG.json5
       - ROS_DOMAIN_ID=5
     volumes:
-      - ./trace/test-subscriber-2:/root/.ros/tracing
-    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=50 dummy_publisher:=false test_subscriber_1:=false"
+      - ./trace/test-subscriber:/root/.ros/tracing
+      - ./rmw_config:/workspaces/src/rmw_config
+    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=1000 dummy_publisher:=false test_subscriber_2:=false"
