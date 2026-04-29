@@ -9,7 +9,7 @@
   // id: "1234567890abcdef",
 
   /// The node's mode (router, peer or client)
-  mode: "peer",
+  mode: "client",
 
   /// Which endpoints to connect to. E.g. tcp/localhost:7447.
   /// By configuring the endpoints, it is possible to tell zenoh which router/peer to connect to at startup.
@@ -93,9 +93,9 @@
     ///
     /// ROS setting: By default accept incoming connections only from localhost (i.e. from colocalized Nodes).
     ///              All communications with other hosts are routed by the Zenoh router.
-    /// endpoints: [
-    ///   "tcp/localhost:0"
-    /// ],
+    endpoints: [
+      "quic/[::]:0"
+    ],
 
     /// Global listen configuration,
     /// Accepts a single value or different values for router, peer and client.
@@ -710,9 +710,9 @@
         /// on router mode then the default WebPKI certificates are used instead.
         root_ca_certificate: "/tls/minica.pem",
         /// Path to the TLS listening side private key
-        listen_private_key: "/tls/minica-key.pem",
+        listen_private_key: null,
         /// Path to the TLS listening side public certificate
-        listen_certificate: "/tls/zenoh-router/cert.pem",
+        listen_certificate: null,
         ///  Enables mTLS (mutual authentication), client authentication
         enable_mtls: false,
         /// Path to the TLS connecting side private key
