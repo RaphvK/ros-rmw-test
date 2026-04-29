@@ -8,6 +8,7 @@ services:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ZENOH_ROUTER_CONFIG_URI=/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5
     volumes:
+      - ./tls:/tls
       - ./rmw_config:/workspaces/src/rmw_config
     command: /bin/bash -ic "source /ws/install/setup.bash && ros2 run rmw_zenoh_cpp rmw_zenohd"
 
@@ -20,6 +21,7 @@ services:
       - ZENOH_SESSION_CONFIG_URI=/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_SESSION_CONFIG.json5
       - ROS_DOMAIN_ID=5
     volumes:
+      - ./tls:/tls
       - ./trace/test-publisher:/root/.ros/tracing
       - ./rmw_config:/workspaces/src/rmw_config
     command: /bin/bash -ic "tshark -i eth0 -w /root/.ros/tracing/test-publisher.pcap -a duration:10 & source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=5 test_subscriber_1:=false test_subscriber_2:=false"
@@ -33,6 +35,7 @@ services:
       - ZENOH_SESSION_CONFIG_URI=/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_SESSION_CONFIG.json5
       - ROS_DOMAIN_ID=5
     volumes:
+      - ./tls:/tls
       - ./trace/test-subscriber:/root/.ros/tracing
       - ./rmw_config:/workspaces/src/rmw_config
     command: /bin/bash -ic "tshark -i eth0 -w /root/.ros/tracing/test-subscriber.pcap -a duration:10 & source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=5 dummy_publisher:=false test_subscriber_2:=false"
