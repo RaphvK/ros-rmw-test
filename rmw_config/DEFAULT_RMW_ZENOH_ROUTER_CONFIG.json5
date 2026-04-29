@@ -89,7 +89,8 @@
     ///
     /// See https://docs.rs/zenoh/latest/zenoh/config/struct.EndPoint.html
     endpoints: [
-      "tcp/[::]:7447"
+      "tcp/[::]:7447",
+      "udp/[::]:7447"
     ],
 
     /// Global listen configuration,
