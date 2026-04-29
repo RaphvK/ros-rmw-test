@@ -7,6 +7,7 @@ services:
     environment:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ZENOH_ROUTER_CONFIG_URI=/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5
+      - RUST_LOG=zenoh=info,zenoh_transport=debug,zenoh::net::runtime=debug
     volumes:
       - ./tls:/tls
       - ./rmw_config:/workspaces/src/rmw_config
@@ -19,12 +20,13 @@ services:
     environment:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ZENOH_SESSION_CONFIG_URI=/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_SESSION_CONFIG.json5
+      - RUST_LOG=zenoh=info,zenoh_transport=debug,zenoh::net::runtime=debug
       - ROS_DOMAIN_ID=5
     volumes:
       - ./tls:/tls
       - ./trace/test-publisher:/root/.ros/tracing
       - ./rmw_config:/workspaces/src/rmw_config
-    command: /bin/bash -ic "tshark -i eth0 -w /root/.ros/tracing/test-publisher.pcap -a duration:10 & source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=5 test_subscriber_1:=false test_subscriber_2:=false"
+    command: /bin/bash -ic "tshark -i eth0 -w /root/.ros/tracing/test-publisher.pcap -a duration:5 & source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=5 test_subscriber_1:=false test_subscriber_2:=false"
 
   test-subscriber:
     build:
@@ -33,9 +35,10 @@ services:
     environment:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - ZENOH_SESSION_CONFIG_URI=/workspaces/src/rmw_config/DEFAULT_RMW_ZENOH_SESSION_CONFIG.json5
+      - RUST_LOG=zenoh=info,zenoh_transport=debug,zenoh::net::runtime=debug
       - ROS_DOMAIN_ID=5
     volumes:
       - ./tls:/tls
       - ./trace/test-subscriber:/root/.ros/tracing
       - ./rmw_config:/workspaces/src/rmw_config
-    command: /bin/bash -ic "tshark -i eth0 -w /root/.ros/tracing/test-subscriber.pcap -a duration:10 & source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=5 dummy_publisher:=false test_subscriber_2:=false"
+    command: /bin/bash -ic "tshark -i eth0 -w /root/.ros/tracing/test-subscriber.pcap -a duration:5 & source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=5 dummy_publisher:=false test_subscriber_2:=false"
