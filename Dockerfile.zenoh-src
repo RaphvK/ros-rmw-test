@@ -2,8 +2,10 @@ FROM rwthika/ros2:jazzy
 
 WORKDIR /ws
 
-RUN apt update && apt install ros-jazzy-rmw-zenoh-cpp -y
+RUN mkdir -p /ws/src/ && git clone https://github.com/ros2/rmw_zenoh.git -b $ROS_DISTRO /ws/src/rmw_zenoh
+RUN apt update && rosdep update && rosdep install -y --from-paths /ws/src --ignore-src --rosdistro $ROS_DISTRO
 
 COPY test_publisher /ws/src/test_publisher
 RUN apt-get update && rosdep update && rosdep install -y --from-paths /ws/src --ignore-src --rosdistro $ROS_DISTRO
+
 RUN . /opt/ros/$ROS_DISTRO/setup.sh && colcon build --symlink-install
