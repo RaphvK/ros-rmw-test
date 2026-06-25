@@ -1,0 +1,63 @@
+services:
+
+  zenoh-router:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_CONFIG_OVERRIDE=listen/endpoints=["tcp/[::]:7447"]
+    ports:
+      - "7447:7447"
+    networks:
+      - default
+    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 run rmw_zenoh_cpp rmw_zenohd"
+
+  test-publisher-1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/zenoh-router:7447"];listen/endpoints=["tcp/[::]:7447"];scouting/multicast/enabled=true #;connect/endpoints=["tcp/host.docker.internal:7447"]
+      - ZENOH_ROUTER_CHECK_ATTEMPTS=0
+      - ROS_DOMAIN_ID=5
+    volumes:
+      - ./trace/test-publisher-1:/root/.ros/tracing
+    networks:
+      - default
+    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=${DURATION} test_subscriber_1:=false test_subscriber_2:=false trace:=${TRACE}"
+
+  test-subscriber-1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_CONFIG_OVERRIDE=connect/endpoints=["tcp/zenoh-router:7447"];listen/endpoints=["tcp/[::]:7447"];scouting/multicast/enabled=true
+      - ZENOH_ROUTER_CHECK_ATTEMPTS=-1
+      - ROS_DOMAIN_ID=5
+    volumes:
+      - ./trace/test-subscriber-1:/root/.ros/tracing
+    networks:
+      - default
+    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=${DURATION} dummy_publisher:=false test_subscriber_2:=false trace:=${TRACE}"
+
+  test-subscriber-network-2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - ZENOH_CONFIG_OVERRIDE=mode="client";connect/endpoints=["tcp/172.17.0.1:7447"]
+      - ZENOH_ROUTER_CHECK_ATTEMPTS=0
+      - ROS_DOMAIN_ID=5
+    volumes:
+      - ./trace/test-subscriber-network-2:/root/.ros/tracing
+    networks:
+      - net2
+    command: /bin/bash -ic "source /ws/install/setup.bash && ros2 launch test_publisher test_publisher_launch.py duration:=${DURATION} dummy_publisher:=false test_subscriber_1:=false trace:=${TRACE}"
+
+networks:
+  default:
+  net2:
